@@ -7,7 +7,6 @@ import kotlinx.coroutines.flow.MutableStateFlow
 
 class AuthRepositoryImpl: AuthRepository {
 
-    // Simulasi local storage dengan variable statis agar persistent selama app running
     companion object {
         private var savedUser: User? = null
     }

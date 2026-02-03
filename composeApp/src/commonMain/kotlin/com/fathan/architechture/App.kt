@@ -29,7 +29,6 @@ fun App() {
             modifier = Modifier.fillMaxSize(),
             color = MaterialTheme.colorScheme.background
         ) {
-            // DI - Sebaiknya gunakan Koin untuk aplikasi tim besar
             val authRepository = remember { AuthRepositoryImpl() }
             val loginUseCase = remember { LoginUseCase(authRepository) }
             val logoutUseCase = remember { LogoutUseCase(authRepository) }
@@ -44,7 +43,6 @@ fun App() {
             
             val loginState by loginViewModel.uiState.collectAsState()
             
-            // safeDrawingPadding() sangat penting untuk iOS (Notch/Home indicator)
             Box(modifier = Modifier.fillMaxSize().safeDrawingPadding()) {
                 when (val state = loginState) {
                     is LoginUiState.LoggedIn -> {
@@ -69,4 +67,3 @@ fun App() {
     }
 }
 
-// Tambahkan import Box yang hilang

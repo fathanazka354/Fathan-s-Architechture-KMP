@@ -25,7 +25,6 @@ fun CalculatorScreen(
     onLogout: () -> Unit
 ) {
     Box(modifier = modifier) {
-        // Logout Button (Using Text to avoid unresolved reference Icons)
         Box(
             modifier = Modifier
                 .align(Alignment.TopEnd)
