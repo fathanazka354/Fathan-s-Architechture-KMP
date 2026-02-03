@@ -6,6 +6,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.composeMultiplatform)
     alias(libs.plugins.composeCompiler)
+    alias(libs.plugins.kotlinx.serialization) // Add this
 }
 
 kotlin {
@@ -29,6 +30,7 @@ kotlin {
         androidMain.dependencies {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.activity.compose)
+            implementation(libs.ktor.client.cio) // Android engine
         }
         commonMain.dependencies {
             implementation(libs.compose.runtime)
@@ -39,6 +41,19 @@ kotlin {
             implementation(libs.compose.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodelCompose)
             implementation(libs.androidx.lifecycle.runtimeCompose)
+            
+            // Ktor core and serialization
+            implementation(libs.ktor.client.core)
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.serialization.kotlinx.json)
+            implementation(libs.kotlinx.serialization.json)
+            
+            // Logging and Auth
+            implementation(libs.ktor.client.logging)
+            implementation(libs.ktor.client.auth)
+        }
+        iosMain.dependencies {
+            implementation(libs.ktor.client.darwin) // iOS engine
         }
         commonTest.dependencies {
             implementation(libs.kotlin.test)
@@ -76,4 +91,3 @@ android {
 dependencies {
     debugImplementation(libs.compose.uiTooling)
 }
-

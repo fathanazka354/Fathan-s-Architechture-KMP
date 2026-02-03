@@ -1,33 +1,45 @@
 package com.fathan.architechture.data
 
+import com.fathan.architechture.data.remote.AuthApiService
 import com.fathan.architechture.domain.model.User
 import com.fathan.architechture.domain.repository.AuthRepository
+import com.fathan.architechture.domain.repository.LocalSettings
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 
-class AuthRepositoryImpl: AuthRepository {
+class AuthRepositoryImpl(
+    private val authApiService: AuthApiService,
+    private val localSettings: LocalSettings
+) : AuthRepository {
 
-    companion object {
-        private var savedUser: User? = null
-    }
+    private val _user = MutableStateFlow<User?>(
+        localSettings.getUsername()?.let { User(it, true) }
+    )
 
-    private val user = MutableStateFlow<User?>(savedUser)
-
-    override fun getAuthState(): Flow<User?> = user
+    override fun getAuthState(): Flow<User?> = _user
 
     override suspend fun login(username: String, password: String): Result<User> {
-        return if (password == "password") {
-            val loggedInUser = User(username, true)
-            savedUser = loggedInUser
-            user.value = loggedInUser
-            Result.success(loggedInUser)
-        } else {
-            Result.failure(Exception("Invalid credentials"))
+        return try {
+            // Implementasi API yang sesungguhnya:
+            // val response = authApiService.login(LoginRequest(username, password))
+            // localSettings.saveUsername(response.username)
+            // ... dst
+            
+            if (password == "password") {
+                val loggedInUser = User(username, true)
+                localSettings.saveUsername(username)
+                _user.value = loggedInUser
+                Result.success(loggedInUser)
+            } else {
+                Result.failure(Exception("Invalid credentials"))
+            }
+        } catch (e: Exception) {
+            Result.failure(e)
         }
     }
 
     override suspend fun logout() {
-        savedUser = null
-        user.value = null
+        localSettings.saveUsername(null)
+        _user.value = null
     }
 }
